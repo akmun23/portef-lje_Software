@@ -34,8 +34,7 @@ int main()
         enemies.push_back(Enemy(name, hp, strength, xp));
     }
 
-    std::cout << "Welcome to the game" << std::endl;
-    std::cout << "Do you want to create a new hero or select an existing one?" << std::endl;
+    std::cout << "Welcome to the game \n" << std::endl;
 
     // Create enemies from a database containing the data
     query.exec("SELECT * "
@@ -54,7 +53,8 @@ int main()
     while(1){
         // Give choice of selecting hero or create new one
         if(selectLoop == 0) {
-            std::cout << "Type 'New' for new hero or 'Select' for existing hero" << std::endl;
+            std::cout << "Do you want to create a new Hero or select an existing one?" << std::endl;
+            std::cout << "Type new or select: ";
         }
 
         std::string input;
@@ -63,7 +63,7 @@ int main()
 
         if(input == "new") {
             std::string name;
-            std::cout << "Enter name for hero: " << std::endl;
+            std::cout << "Enter name for hero: ";
             std::cin >> name;
             heroes.push_back(Hero(name));
             currHero = heroes.size()-1;
@@ -75,7 +75,10 @@ int main()
             } else {
                 std::cout << "Heroes available: ";
                 for(int i = 0; i < heroes.size(); i++) {
-                    std::cout << heroes[i].getName() << ", ";
+                    std::cout << heroes[i].getName();
+                    if(i != heroes.size()-1) {
+                        std::cout << ", ";
+                    }
                 }
                 std::cout << std::endl;
             }
@@ -100,9 +103,12 @@ int main()
         }
     }
 
+    std::cout << std::endl;
+    std::cout << "You are now playing as " << heroes[currHero].getName() << std::endl;
+
     // Main loop
     while(1){
-        std::cout << "Type fight or exit" << std::endl;
+        std::cout << "Type fight to attack enemy or exit to save character and exit: ";
         std::string input;
         std::cin >> input;
         input[0] = tolower(input[0]);
@@ -110,12 +116,12 @@ int main()
             break;
         } else if(input == "fight"){
             // Fight an enemy
-            std::cout << "Enemies available: ";
+            std::cout << "Enemies available: " << std::endl;
             for(int i = 0; i < enemies.size(); i++) {
                 std::cout << enemies[i].getName() << std::endl;
             }
             std::string name;
-            std::cout << "Enter name of enemy: " << std::endl;
+            std::cout << "Enter name of enemy: ";
             std::cin.ignore();
             std::getline(std::cin, name);
             bool found = false;
@@ -128,15 +134,15 @@ int main()
             }
 
             if(found){
-                std::cout << heroes[currHero].getName() << " vs. " << enemies[currEnemy].getName() << std::endl;
-                std::cout << heroes[currHero].getName() << " has " << heroes[currHero].getHp() << " hp" << std::endl;
-                std::cout << enemies[currEnemy].getName() << " has " << enemies[currEnemy].getHp() << " hp" << std::endl;
+                std::cout << std::endl;
+                std::cout << heroes[currHero].getName() << "(" << heroes[currHero].getHp() << " hp" << ")" << " vs. "
+                          << enemies[currEnemy].getName() << "(" << enemies[currEnemy].getHp() << " hp" << ")" << std::endl;
                 int heroDamage = heroes[currHero].getStrength();
                 int enemyHp = enemies[currEnemy].getHp();
                 int enemyDamage = enemies[currEnemy].getStrength();
                 int heroHp = heroes[currHero].getHp();
                 while(1){
-                    std::cout << "Press enter to continue" << std::endl;
+                    std::cout << "Press enter to continue";
                     std::cin.ignore();
                     // Hero attacks enemy
                     enemyHp -= heroDamage;
