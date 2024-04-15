@@ -12,6 +12,9 @@ private:
     int _xp;
 public:
     Enemy(std::string name, int hp, int strength, int xp);
+    std::string getName();
+    int getHp();
+    int getStrength();
 };
 
 #endif // ENEMY_H

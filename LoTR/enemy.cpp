@@ -4,3 +4,15 @@ Enemy::Enemy(std::string name, int hp, int strength, int xp):_name(name), _hp(hp
 
 }
 
+std::string Enemy::getName(){
+    return _name;
+}
+
+int Enemy::getHp(){
+    return _hp;
+}
+
+int Enemy::getStrength(){
+    return _strength;
+}
+

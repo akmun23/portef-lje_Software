@@ -7,7 +7,7 @@ create table hero (
 	hp int not null,
 	strength int not null,
 	level int not null,
-	xp int not null,
+	xp int,
 	primary key (hero_id)	
 );
 
@@ -21,7 +21,7 @@ create table enemy (
 ); 
 
 INSERT INTO enemy (name, hp, strength, xp)
-VALUES ("Hest", 4, 1, 100);
+VALUES ("Horse", 4, 1, 100);
 
 INSERT INTO enemy (name, hp, strength, xp)
 VALUES ("Weak Goblin", 4, 2, 200);
