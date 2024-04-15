@@ -1,0 +1,45 @@
+create schema LoTR;
+use LoTR;
+
+create table hero (
+	hero_id int not null AUTO_INCREMENT,
+	name char(125),
+	hp int not null,
+	strength int not null,
+	level int not null,
+	xp int not null,
+	primary key (hero_id)	
+);
+
+create table enemy (
+  enemy_id int not null AUTO_INCREMENT,
+  name char(125),
+  hp int not null,
+  strength int not null,
+  xp int not null,
+  primary key (enemy_id)
+); 
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Hest", 4, 1, 100);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Weak Goblin", 4, 2, 200);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Strong Gobil", 8, 3, 400);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Stronger Goblin", 10, 4, 500);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Strongest Goblin", 15, 5, 800);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Ape King", 30, 5, 1000);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Unicorn", 5, 8, 1500);
+
+INSERT INTO enemy (name, hp, strength, xp)
+VALUES ("Dragon", 100, 10, 3000);
