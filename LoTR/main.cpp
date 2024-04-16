@@ -149,7 +149,7 @@ int main()
                     std::cout << heroes[currHero].getName() << " attacks " << enemies[currEnemy].getName() << " for " << heroDamage << " damage" << std::endl;
                     std::cout << enemies[currEnemy].getName() << " has " << enemyHp << " hp" << std::endl;
                     if(enemyHp <= 0){
-                        std::cout << "You won" << std::endl;
+                        std::cout << "You won \n" << std::endl;
                         query.prepare("SELECT xp "
                                       "FROM enemy "
                                       "WHERE name = :name");

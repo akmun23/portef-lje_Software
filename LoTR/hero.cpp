@@ -40,7 +40,7 @@ Hero::~Hero(){
 
 void Hero::giveXp(int xp){
     _xp += xp;
-    if(_xp >= 1000){
+    if(_xp >= _level*1000){
         levelUp();
     }
 }
