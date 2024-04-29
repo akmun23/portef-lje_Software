@@ -43,3 +43,4 @@ VALUES ("Unicorn", 5, 8, 1500);
 
 INSERT INTO enemy (name, hp, strength, xp)
 VALUES ("Dragon", 100, 10, 3000);
+

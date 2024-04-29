@@ -1,28 +1,28 @@
 #include "hero.h"
 
-Hero::Hero(int heroID) {
+Hero::Hero(int heroID):Character("", 0, 0){
     query.prepare("SELECT * "
                   "FROM hero "
                   "WHERE hero_id = :heroID");
     query.bindValue(":heroID", heroID);
     query.exec();
     while(query.next()){
-        _name = query.value(1).toString().toStdString();
-        _hp = query.value(2).toInt();
-        _strength = query.value(3).toInt();
+        setName(query.value(1).toString().toStdString());
+        setHp(query.value(2).toInt());
+        setStrength(query.value(3).toInt());
         _level = query.value(4).toInt();
         _xp = query.value(5).toInt();
     }
 }
 
-Hero::Hero(std::string name):_name(name){
+Hero::Hero(std::string name):Character(name, 10, 1){
     query.prepare("INSERT INTO hero (name, hp, strength, level, xp)"
                   "VALUES (:name, :hp, :strength, :level, :xp)");
-    query.bindValue(":name", QString::fromStdString(_name));
-    query.bindValue(":hp", _hp);
-    query.bindValue(":strength", _strength);
-    query.bindValue(":level", _level);
-    query.bindValue(":xp", _xp);
+    query.bindValue(":name", QString::fromStdString(name));
+    query.bindValue(":hp", 10);
+    query.bindValue(":strength", 2);
+    query.bindValue(":level", 1);
+    query.bindValue(":xp", 0);
     query.exec();
 }
 
@@ -30,15 +30,15 @@ Hero::~Hero(){
     query.prepare("UPDATE hero "
                   "SET hp = :hp, strength = :strength, level = :level, xp = :xp "
                   "WHERE name = :name");
-    query.bindValue(":name", QString::fromStdString(_name));
-    query.bindValue(":hp", _hp);
-    query.bindValue(":strength", _strength);
+    query.bindValue(":name", QString::fromStdString(getName()));
+    query.bindValue(":hp", getHp());
+    query.bindValue(":strength", getStrength());
     query.bindValue(":level", _level);
     query.bindValue(":xp", _xp);
     query.exec();
 }
 
-void Hero::giveXp(int xp){
+void Hero::getXp(int xp){
     _xp += xp;
     if(_xp >= _level*1000){
         levelUp();
@@ -46,20 +46,8 @@ void Hero::giveXp(int xp){
 }
 
 void Hero::levelUp() {
+    _xp -= _level*1000;
     _level++;
-    _strength++;
-    _hp += 2;
-    _xp -= 1000;
-}
-
-std::string Hero::getName(){
-    return _name;
-}
-
-int Hero::getHp(){
-    return _hp;
-}
-
-int Hero::getStrength(){
-    return _strength;
+    setStrength(getStrength()+1);
+    setHp(getHp()+2);
 }

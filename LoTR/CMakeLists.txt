@@ -9,7 +9,9 @@ find_package(Qt5Sql REQUIRED)
 
 add_executable(LoTR main.cpp
     hero.h hero.cpp
-    enemy.h enemy.cpp)
+    enemy.h enemy.cpp
+    interface.h interface.cpp
+    character.h character.cpp)
 
 include(GNUInstallDirs)
 install(TARGETS LoTR

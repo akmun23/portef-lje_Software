@@ -1,30 +1,21 @@
 #ifndef HERO_H
 #define HERO_H
 
-#include <QCoreApplication>
-#include <QtSql>
-#include <QSqlDatabase>
+#include "character.h"
 #include <string>
 
-class Hero
+class Hero : public Character
 {
 private:
-    std::string _name;
-    int _xp = 0;
-    int _hp = 10;
-    int _level = 1;
-    int _strength = 2;
+    int _xp;
+    int _level;
 
 public:
-    QSqlQuery query;
     Hero(int heroID);
     Hero(std::string name);
     ~Hero();
+    void getXp(int xp);
     void levelUp();
-    std::string getName();
-    int getHp();
-    int getStrength();
-    void giveXp(int xp);
 };
 
 #endif // HERO_H
