@@ -19,8 +19,9 @@ class Interface
     QSqlDatabase db;
 public:
     Interface(QSqlDatabase &db);
-    void heroSelection();
+    bool heroSelection();
     void singleBattle();
+    void gameLoop();
 };
 
 #endif // INTERFACE_H

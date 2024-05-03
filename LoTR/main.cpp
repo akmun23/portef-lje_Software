@@ -19,8 +19,8 @@ int main()
     Interface Interface(db);
 
     std::cout << "Welcome to the game \n" << std::endl;
-    Interface.heroSelection();
-    Interface.singleBattle();
+    Interface.gameLoop();
+    std::cout << "Thank you for playing!" << std::endl;
 
     return 0;
 }

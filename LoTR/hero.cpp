@@ -1,15 +1,12 @@
 #include "hero.h"
 
-Hero::Hero(int heroID):Character("", 0, 0){
+Hero::Hero(int heroID, std::string name, int hp, int strength):Character(name, hp, strength){
     query.prepare("SELECT * "
                   "FROM hero "
                   "WHERE hero_id = :heroID");
     query.bindValue(":heroID", heroID);
     query.exec();
     while(query.next()){
-        setName(query.value(1).toString().toStdString());
-        setHp(query.value(2).toInt());
-        setStrength(query.value(3).toInt());
         _level = query.value(4).toInt();
         _xp = query.value(5).toInt();
     }

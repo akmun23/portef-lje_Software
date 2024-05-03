@@ -11,7 +11,7 @@ private:
     int _level = 1;
 
 public:
-    Hero(int heroID);
+    Hero(int heroID, std::string name, int hp, int strength);
     Hero(std::string name);
     ~Hero();
     void getXp(int xp);

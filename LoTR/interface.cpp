@@ -83,12 +83,16 @@ Interface::Interface(QSqlDatabase &db) {
     query.exec("SELECT * FROM hero");
     while(query.next()) {
         int hero_id = query.value(0).toInt();
-        heroes.push_back(Hero(hero_id));
+        std::string  name = query.value(1).toString().toStdString();
+        int hp = query.value(2).toInt();
+        int strength = query.value(3).toInt();
+
+        heroes.push_back(Hero(hero_id, name, hp, strength));
     }
 
 }
 
-void Interface::heroSelection(){
+bool Interface::heroSelection(){
     int selectLoop = 0;
     while(1){
         // Give choice of selecting hero or create new one
@@ -96,19 +100,21 @@ void Interface::heroSelection(){
             std::cout << "Do you want to create a new Hero or select an existing one?" << std::endl;
             std::cout << "Press (0) to create a new hero" << std::endl;
             std::cout << "Press (1) to select an existing hero" << std::endl;
+            std::cout << "Press (9) to exit" << std::endl;
         }
         std::cout << "Enter your choice: ";
         std::string input;
         std::cin >> input;
         std::cout << std::endl;
-
-        if(input == "0") {
+        if(input == "9") {
+            return false;
+        } else if(input == "0") {
             std::string name;
             std::cout << "Enter name for hero: ";
             std::cin >> name;
             heroes.push_back(Hero(name));
             _currHero = heroes.size()-1;
-            break;
+            return true;
         } else if(input == "1") {
             if(heroes.size() == 0) {
                 std::cout << "No heroes available" << std::endl;
@@ -127,7 +133,7 @@ void Interface::heroSelection(){
                 if(name == std::to_string(i)) {
                     _currHero = i;
                     found = true;
-                    break;
+                    return true;
                 }
             }
             if(found) {
@@ -154,12 +160,10 @@ void Interface::singleBattle(){
         std::cout << "Enter your choice: ";
         std::string input;
         std::cin >> input;
-        std::cout << std::endl;
-
         if(input == "9"){
             break;
-
         } else if(input == "0"){
+            std::cout << std::endl;
             // Fight an enemy
             std::cout << "Enemies available: " << std::endl;
             for(int i = 0; i < enemies.size(); i++) {
@@ -223,7 +227,9 @@ void Interface::singleBattle(){
 }
 
 void Interface::gameLoop(){
-    heroSelection();
+    if(!heroSelection()){
+        return;
+    }
     std::cout << "You are now playing as " << heroes[_currHero].getName() << std::endl;
     singleBattle();
 }

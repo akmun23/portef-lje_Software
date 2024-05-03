@@ -15,9 +15,7 @@ private:
 
 public:
     QSqlQuery query;
-
     Character(std::string name, int hp, int strength);
-    void createHero();
     std::string getName();
     int getHp();
     int getStrength();
