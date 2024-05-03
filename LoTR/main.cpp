@@ -8,20 +8,19 @@ using namespace std;
 
 int main()
 {
-    // Setup database
+    // Replace with your MySQL database connection parameters
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
-    db.setDatabaseName("LoTR"); // Ret til det schema navn du har valgt
+    db.setDatabaseName("mysql");
     db.setUserName("aksel");  // Ret brugernavn
     db.setPassword("password");  // Ret password
-    db.open();
 
     // Makes query object
-    Interface Interface;
+    Interface Interface(db);
 
     std::cout << "Welcome to the game \n" << std::endl;
     Interface.heroSelection();
-    Interface.battle();
+    Interface.singleBattle();
 
     return 0;
 }

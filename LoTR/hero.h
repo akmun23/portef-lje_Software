@@ -7,8 +7,8 @@
 class Hero : public Character
 {
 private:
-    int _xp;
-    int _level;
+    int _xp = 0;
+    int _level = 1;
 
 public:
     Hero(int heroID);

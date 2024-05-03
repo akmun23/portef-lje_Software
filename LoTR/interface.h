@@ -16,10 +16,11 @@ class Interface
     std::vector<Hero> heroes;
     int _currHero;
     int _currEnemy;
+    QSqlDatabase db;
 public:
-    Interface();
+    Interface(QSqlDatabase &db);
     void heroSelection();
-    void battle();
+    void singleBattle();
 };
 
 #endif // INTERFACE_H

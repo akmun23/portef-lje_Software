@@ -15,7 +15,7 @@ Hero::Hero(int heroID):Character("", 0, 0){
     }
 }
 
-Hero::Hero(std::string name):Character(name, 10, 1){
+Hero::Hero(std::string name):Character(name, 10, 2){
     query.prepare("INSERT INTO hero (name, hp, strength, level, xp)"
                   "VALUES (:name, :hp, :strength, :level, :xp)");
     query.bindValue(":name", QString::fromStdString(name));
