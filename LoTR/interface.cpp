@@ -25,6 +25,7 @@ Interface::Interface(QSqlDatabase &db) {
         qDebug() << "Using database: LoTR";
     }
 
+    // Creates tables
     if(!query.exec("CREATE TABLE IF NOT EXISTS hero ("
                     "hero_id INT NOT NULL AUTO_INCREMENT,"
                     "name CHAR(125),"
@@ -33,9 +34,20 @@ Interface::Interface(QSqlDatabase &db) {
                     "level INT NOT NULL,"
                     "xp INT,"
                     "gold INT,"
+                    "magic INT,"
                     "PRIMARY KEY (hero_id)"
                     ")")) {
         qWarning() << "Failed to create table 'hero':";
+        qWarning() << query.lastError().text();
+    }
+
+    if (!query.exec("CREATE TABLE IF NOT EXISTS element ("
+                    "element_id INT NOT NULL AUTO_INCREMENT,"
+                    "element CHAR(125),"
+                    "weakness CHAR(125),"
+                    "PRIMARY KEY (element_id)"
+                    ")")) {
+        qWarning() << "Failed to create table 'element':";
         qWarning() << query.lastError().text();
     }
 
@@ -45,7 +57,9 @@ Interface::Interface(QSqlDatabase &db) {
                     "hp INT NOT NULL,"
                     "strength INT NOT NULL,"
                     "xp INT NOT NULL,"
-                    "PRIMARY KEY (enemy_id)"
+                    "element_id INT,"
+                    "PRIMARY KEY (enemy_id),"
+                    "FOREIGN KEY (element_id) REFERENCES element(element_id)"
                     ")")) {
         qWarning() << "Failed to create table 'enemy':";
         qWarning() << query.lastError().text();
@@ -61,21 +75,83 @@ Interface::Interface(QSqlDatabase &db) {
         qWarning() << query.lastError().text();
     }
 
+    if (!query.exec("CREATE TABLE IF NOT EXISTS magic ("
+                    "magic_id INT PRIMARY KEY AUTO_INCREMENT,"
+                    "name VARCHAR(255) NOT NULL,"
+                    "strength INT,"
+                    "self_harm INT,"
+                    "magic_cost INT,"
+                    "element_id INT,"
+                    "gold_cost INT,"
+                    "required_magic VARCHAR(255),"
+                    "FOREIGN KEY (element_id) REFERENCES element(element_id)"
+                    ")")) {
+        qWarning() << "Failed to create table 'magic':";
+        qWarning() << query.lastError().text();
+    }
+
+    if (!query.exec("CREATE TABLE IF NOT EXISTS inventory ("
+                    "inventory_id INT PRIMARY KEY AUTO_INCREMENT,"
+                    "hero_id INT NOT NULL,"
+                    "magic_id INT NOT NULL,"
+                    "FOREIGN KEY (hero_id) REFERENCES hero(hero_id),"
+                    "FOREIGN KEY (magic_id) REFERENCES magic(magic_id)"
+                    ")")) {
+        qWarning() << "Failed to create table 'Inventory':";
+        qWarning() << query.lastError().text();
+    }
+
     qDebug() << "Tables created!";
+
+    query.exec("SELECT * FROM element");
+    if(query.size() < 1){
+        // Execute SQL commands to insert data into the element table
+        if (!query.exec("INSERT INTO element (element, weakness) "
+                        "VALUES ('Wood', 'Fire'),"
+                        "('Earth', 'Metal'),"
+                        "('Metal', 'Water'),"
+                        "('Fire', 'Earth'),"
+                        "('Water', 'Wood')")) {
+            qWarning() << "Failed to insert data into table 'element':";
+            qWarning() << query.lastError().text();
+        }
+        qDebug() << "Data inserted successfully!";
+    }
 
     query.exec("SELECT * FROM enemy");
     if(query.size() < 1){
         // Execute SQL commands to insert data into the enemy table
-        if (!query.exec("INSERT INTO enemy (name, hp, strength, xp) "
-                        "VALUES ('Horse', 4, 1, 100),"
-                        "('Weak Goblin', 4, 2, 200),"
-                        "('Strong Goblin', 8, 3, 400),"
-                        "('Stronger Goblin', 10, 4, 500),"
-                        "('Strongest Goblin', 15, 5, 800),"
-                        "('Ape King', 30, 5, 1000),"
-                        "('Unicorn', 5, 8, 1500),"
-                        "('Dragon', 100, 10, 3000)")) {
+        if (!query.exec("INSERT INTO enemy (name, hp, strength, xp, element_id) "
+                        "VALUES ('Horse', 4, 1, 100, 1),"
+                        "('Weak Goblin', 4, 2, 200, 2),"
+                        "('Strong Goblin', 8, 3, 400, 3),"
+                        "('Stronger Goblin', 10, 4, 500, 4),"
+                        "('Strongest Goblin', 15, 5, 800, 4),"
+                        "('Ape King', 30, 5, 1000, 1),"
+                        "('Unicorn', 5, 8, 1500, 5),"
+                        "('Dragon', 100, 10, 3000, 4)")) {
             qWarning() << "Failed to insert data into table 'enemy':";
+            qWarning() << query.lastError().text();
+        }
+        qDebug() << "Data inserted successfully!";
+    }
+
+    query.exec("SELECT * FROM magic");
+    if(query.size() < 1){
+        // Execute SQL commands to insert data into the enemy table
+        if (!query.exec("INSERT INTO magic (name, strength, self_harm, magic_cost, element_id, gold_cost, required_magic) "
+                        "VALUES ('Ember', 4, 1, 2, 4, 5, NULL), "
+                        "('Knife', 1, 0, 0, 3, 0, NULL), "
+                        "('Sword', 3, 1, 0, 3, 10, 'Knife'), "
+                        "('Morningstar', 6, 3, 0, 3, 20, 'Sword'), "
+                        "('Firestar', 12, 3, 4, 4, 40, 'Morningstar, Fireball'), "
+                        "('Fireball', 6, 1, 4, 4, 15, 'Glowder'), "
+                        "('StealLife', 2, -2, 2, 1, 15, NULL), "
+                        "('MagicForLife', 2, -2, 2, 1, 15, NULL), "
+                        "('Stick', 5, 0, 1, 1, 5, NULL), "
+                        "('GiveMagic', 0, 0, -5, 5, 10, NULL), "
+                        "('GiveLife', 0, -10, 5, 5, 20, 'GiveMagic')")) {
+            qWarning() << "Failed to insert data into table 'magic':";
             qWarning() << query.lastError().text();
         }
         qDebug() << "Data inserted successfully!";
@@ -104,7 +180,8 @@ Interface::Interface(QSqlDatabase &db) {
         int hp = query.value(2).toInt();
         int strength = query.value(3).toInt();
         int xp = query.value(4).toInt();
-        enemies.push_back(Enemy(name, hp, strength, xp));
+        std::string element = query.value(5).toString().toStdString();
+        enemies.push_back(Enemy(name, hp, strength, xp, element));
     }
 
     // Create heroes from a database containing the data
@@ -299,7 +376,7 @@ bool Interface::caveBattle(){
                QString::number(cave.getGold()) +
                "' WHERE name = '" +
                QString::fromStdString(heroes[_currHero].getName()) + "'");
-    heroes[_currHero].getGold(cave.getGold());
+    heroes[_currHero].gainGold(cave.getGold());
     return true;
 }
 
@@ -307,6 +384,7 @@ bool Interface::gameChoice(){
     std::cout << "Do you want to fight or exit?" << std::endl;
     std::cout << "Press (0) to fight" << std::endl;
     std::cout << "Press (1) to go to caves" << std::endl;
+    std::cout << "Press (2) to enter shop" << std::endl;
     std::cout << "Press (9) to exit" << std::endl;
     std::cout << "Enter your choice: ";
     std::string input;
@@ -322,6 +400,10 @@ bool Interface::gameChoice(){
             return true;
         }
         return false;
+    } else if(input == "2"){
+        if(magicShop.enterShop(heroes[_currHero])){
+            return true;
+        }
     } else if(input == "9"){
         return false;
     }

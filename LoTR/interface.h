@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "hero.h"
 #include "cave.h"
+#include "magicshop.h"
 #include<iostream>
 #include<vector>
 #include <QCoreApplication>
@@ -14,6 +15,7 @@ class Interface
 {
     QSqlQuery query;
     QSqlDatabase db;
+    MagicShop magicShop;
     std::vector<Enemy> enemies;
     std::vector<Hero> heroes;
     int _currHero;

@@ -18,6 +18,7 @@ std::vector<Enemy> Cave::makeCave(){
     int hp;
     int strength;
     int xp;
+    std::string element;
 
     if(_id == 7){
         query.exec("SELECT * FROM enemy WHERE enemy_id = '7'");
@@ -26,8 +27,9 @@ std::vector<Enemy> Cave::makeCave(){
         hp = query.value(2).toInt();
         strength = query.value(3).toInt();
         xp = query.value(4).toInt();
+        element = query.value(5).toString().toStdString();
         for(int i = 0; i < numEnemies; i++){
-            enemies.push_back(Enemy(name, hp, strength, xp));
+            enemies.push_back(Enemy(name, hp, strength, xp, element));
         }
     } else if(_id == 6){
         std::cout << "This is the boss level" << std::endl;
@@ -38,7 +40,8 @@ std::vector<Enemy> Cave::makeCave(){
             hp = query.value(2).toInt();
             strength = query.value(3).toInt();
             xp = query.value(4).toInt();
-            enemies.push_back(Enemy(name, hp, strength, xp));
+            element = query.value(5).toString().toStdString();
+            enemies.push_back(Enemy(name, hp, strength, xp, element));
         }
         query.exec("SELECT * FROM enemy WHERE enemy_id = '8'");
         query.next();
@@ -46,7 +49,8 @@ std::vector<Enemy> Cave::makeCave(){
         hp = query.value(2).toInt();
         strength = query.value(3).toInt();
         xp = query.value(4).toInt();
-        enemies.push_back(Enemy(name, hp, strength, xp));
+        element = query.value(5).toString().toStdString();
+        enemies.push_back(Enemy(name, hp, strength, xp, element));
     } else {
         for(int i = 0; i < numEnemies; i++){
             if(i == numEnemies-1){
@@ -61,7 +65,8 @@ std::vector<Enemy> Cave::makeCave(){
             hp = query.value(2).toInt();
             strength = query.value(3).toInt();
             xp = query.value(4).toInt();
-            enemies.push_back(Enemy(name, hp, strength, xp));
+            element = query.value(5).toString().toStdString();
+            enemies.push_back(Enemy(name, hp, strength, xp, element));
         }
     }
     return enemies;

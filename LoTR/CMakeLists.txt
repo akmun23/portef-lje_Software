@@ -12,7 +12,8 @@ add_executable(LoTR main.cpp
     enemy.h enemy.cpp
     interface.h interface.cpp
     character.h character.cpp
-    cave.h cave.cpp)
+    cave.h cave.cpp
+    magicshop.h magicshop.cpp)
 
 include(GNUInstallDirs)
 install(TARGETS LoTR

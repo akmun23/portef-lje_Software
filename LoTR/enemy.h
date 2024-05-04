@@ -8,9 +8,10 @@ class Enemy : public Character
 {
 private:
     int _xp;
+    std::string _element;
 
 public:
-    Enemy(std::string name, int hp, int strength, int xp);
+    Enemy(std::string name, int hp, int strength, int xp, std::string element);
     int getXp();
 };
 
