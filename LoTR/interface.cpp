@@ -225,7 +225,7 @@ bool Interface::singleBattle(){
     }
 }
 
-bool Interface::caves(){
+bool Interface::caveBattle(){
     std::cout << std::endl;
     int cavePicked;
     while(1){
@@ -318,7 +318,7 @@ bool Interface::gameChoice(){
         }
         return false;
     } else if(input == "1"){
-        if(caves()){
+        if(caveBattle()){
             return true;
         }
         return false;

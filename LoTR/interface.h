@@ -13,11 +13,11 @@
 class Interface
 {
     QSqlQuery query;
+    QSqlDatabase db;
     std::vector<Enemy> enemies;
     std::vector<Hero> heroes;
     int _currHero;
     int _currEnemy;
-    QSqlDatabase db;
     bool _bossBattle = false;
 
 public:
@@ -25,7 +25,7 @@ public:
     bool heroSelection();
     bool gameChoice();
     bool singleBattle();
-    bool caves();
+    bool caveBattle();
     void gameLoop();
 };
 
