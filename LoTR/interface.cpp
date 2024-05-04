@@ -198,15 +198,12 @@ Interface::Interface(QSqlDatabase &db) {
 }
 
 bool Interface::heroSelection(){
-    int selectLoop = 0;
     while(1){
         // Give choice of selecting hero or create new one
-        if(selectLoop == 0) {
-            std::cout << "Do you want to create a new Hero or select an existing one?" << std::endl;
-            std::cout << "Press (0) to create a new hero" << std::endl;
-            std::cout << "Press (1) to select an existing hero" << std::endl;
-            std::cout << "Press (9) to exit" << std::endl;
-        }
+        std::cout << "Do you want to create a new Hero or select an existing one?" << std::endl;
+        std::cout << "Press (0) to create a new hero" << std::endl;
+        std::cout << "Press (1) to select an existing hero" << std::endl;
+        std::cout << "Press (9) to exit" << std::endl;
         std::cout << "Enter your choice: ";
         std::string input;
         std::cin >> input;
@@ -243,14 +240,11 @@ bool Interface::heroSelection(){
                     std::cout << std::endl;
                     std::cout << "You are now playing as " << heroes[_currHero].getName() << std::endl;
                     return true;
-
                 }
             }
                 std::cout << "Hero not found" << std::endl;
-                selectLoop++;
             } else {
                 std::cout << "Invalid input" << std::endl;
-                selectLoop++;
             }
         }
     return true;
@@ -352,6 +346,7 @@ bool Interface::caveBattle(){
                 std::cout << "The next enemy is: " << caveEnemies[i+1].getName() << std::endl;
                 std::cout << "Press (0) to venture further into the cave" << std::endl;
                 std::cout << "Press (1) to exit the cave" << std::endl;
+                std::cout << "Enter your choice: ";
                 std::string input;
                 std::cin >> input;
                 std::cout << std::endl;
@@ -406,6 +401,9 @@ bool Interface::gameChoice(){
         }
     } else if(input == "9"){
         return false;
+    } else {
+        std::cout << "Invalid input" << std::endl;
+        std::cout << std::endl;
     }
     return true;
 }

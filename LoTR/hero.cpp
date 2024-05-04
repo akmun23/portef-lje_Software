@@ -171,10 +171,6 @@ void Hero::fight(Enemy enemy){
             damage = magicDamage;
             setHp(getHp()-selfDamage);
             _magic -= magicCost;
-            query.prepare("UPDATE hero "
-                          "SET magic = :magic "
-                          "WHERE name = :name");
-            query.bindValue(":magic", _magic);
             query.bindValue(":name", QString::fromStdString(getName()));
             query.exec();
         }
@@ -189,6 +185,7 @@ void Hero::fight(Enemy enemy){
             while(query.next()){
                 setHp(query.value(2).toInt());
             }
+            _magic = (_level*2)-2;
             gainXp(enemy.getXp());
             return;
         }
@@ -199,7 +196,11 @@ void Hero::fight(Enemy enemy){
         std::cout << getName() << " has " << getHp() << " hp" << std::endl;
 
         if(getHp() <= 0){
+            _magic = (_level*2)-2;
             query.exec("SELECT * FROM hero WHERE name = '" + QString::fromStdString(getName()) + "'");
+            while(query.next()){
+                setHp(query.value(2).toInt());
+            }
             std::cout << "You died" << std::endl;
             return;
         }

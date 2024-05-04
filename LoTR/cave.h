@@ -14,6 +14,7 @@ class Cave
     std::string _name;
     int _gold = 0;
     QSqlQuery query;
+
 public:
     Cave(int caveID);
     std::vector<Enemy> makeCave();
