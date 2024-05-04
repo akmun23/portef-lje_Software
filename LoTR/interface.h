@@ -3,6 +3,7 @@
 
 #include "enemy.h"
 #include "hero.h"
+#include "cave.h"
 #include<iostream>
 #include<vector>
 #include <QCoreApplication>
@@ -22,7 +23,9 @@ class Interface
 public:
     Interface(QSqlDatabase &db);
     bool heroSelection();
+    bool gameChoice();
     bool singleBattle();
+    bool caves();
     void gameLoop();
 };
 

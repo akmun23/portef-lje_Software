@@ -11,6 +11,7 @@ class Hero : public Character
 private:
     int _xp = 0;
     int _level = 1;
+    int _gold = 0;
 
 public:
     Hero(int heroID, std::string name, int hp, int strength);
@@ -18,6 +19,7 @@ public:
     ~Hero();
     void fight(Enemy enemy);
     void getXp(int xp);
+    void getGold(int gold);
     void levelUp();
 };
 
