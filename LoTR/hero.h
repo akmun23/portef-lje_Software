@@ -2,7 +2,9 @@
 #define HERO_H
 
 #include "character.h"
+#include "enemy.h"
 #include <string>
+#include <iostream>
 
 class Hero : public Character
 {
@@ -14,6 +16,7 @@ public:
     Hero(int heroID, std::string name, int hp, int strength);
     Hero(std::string name);
     ~Hero();
+    void fight(Enemy enemy);
     void getXp(int xp);
     void levelUp();
 };

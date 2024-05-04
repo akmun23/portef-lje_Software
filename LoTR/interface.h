@@ -17,10 +17,12 @@ class Interface
     int _currHero;
     int _currEnemy;
     QSqlDatabase db;
+    bool _bossBattle = false;
+
 public:
     Interface(QSqlDatabase &db);
     bool heroSelection();
-    void singleBattle();
+    bool singleBattle();
     void gameLoop();
 };
 

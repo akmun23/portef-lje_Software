@@ -35,6 +35,39 @@ Hero::~Hero(){
     query.exec();
 }
 
+void Hero::fight(Enemy enemy){
+    int enemyHp = enemy.getHp();
+    int enemyDamage = enemy.getStrength();
+    std::cin.ignore();
+    while(1){
+        std::cout << "Press enter to continue";
+        std::cin.ignore();
+        // Hero attacks enemy
+        enemyHp -= getStrength();
+        std::cout << getName() << " attacks " << enemy.getName() << " for " << getStrength() << " damage" << std::endl;
+        std::cout << enemy.getName() << " has " << enemyHp << " hp" << std::endl;
+        if(enemyHp <= 0){
+            std::cout << "You won \n" << std::endl;
+            getXp(enemy.getXp());
+            query.exec("SELECT * FROM hero WHERE name = '" + QString::fromStdString(getName()) + "'");
+            while(query.next()){
+                setHp(query.value(2).toInt());
+            }
+            return;
+        }
+
+        // Enemy attacks hero
+        setHp(getHp()-enemyDamage);
+        std::cout << enemy.getName() << " attacks " << getName() << " for " << enemyDamage << " damage" << std::endl;
+        std::cout << getName() << " has " << getHp() << " hp" << std::endl;
+
+        if(getHp() <= 0){
+            std::cout << "You died" << std::endl;
+            return;
+        }
+    }
+}
+
 void Hero::getXp(int xp){
     _xp += xp;
     if(_xp >= _level*1000){

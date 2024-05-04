@@ -133,6 +133,8 @@ bool Interface::heroSelection(){
                 if(name == std::to_string(i)) {
                     _currHero = i;
                     found = true;
+                    std::cout << std::endl;
+                    std::cout << "You are now playing as " << heroes[_currHero].getName() << std::endl;
                     return true;
                 }
             }
@@ -151,7 +153,7 @@ bool Interface::heroSelection(){
 
 }
 
-void Interface::singleBattle(){
+bool Interface::singleBattle(){
     // Main loop
     while(1){
         std::cout << "Do you want to fight or exit?" << std::endl;
@@ -160,15 +162,22 @@ void Interface::singleBattle(){
         std::cout << "Enter your choice: ";
         std::string input;
         std::cin >> input;
+
+        // Exits the loop returning false
         if(input == "9"){
-            break;
+            return false;
+
+        // If a battle is chosen an enemy has to be chosen
         } else if(input == "0"){
             std::cout << std::endl;
-            // Fight an enemy
+
+            // Shows available enemies
             std::cout << "Enemies available: " << std::endl;
             for(int i = 0; i < enemies.size(); i++) {
                 std::cout << "(" << i << ") " << enemies[i].getName() << std::endl;
             }
+
+            //
             int name;
             bool found = false;
             std::cout << "Press the corresponding number to fight enemy: ";
@@ -177,45 +186,30 @@ void Interface::singleBattle(){
             if(name >= 0 && name < enemies.size()){
                 _currEnemy = name;
                 found = true;
+                if(enemies[_currEnemy].getName() == "Dragon"){
+                    std::cout << "You have encountered the Dragon!" << std::endl;
+                    std::cout << "The final battle has begun!" << std::endl;
+                    std::cout << std::endl;
+                    _bossBattle = true;
+                }
             }
 
             if(found){
                 std::cout << heroes[_currHero].getName() << "(" << heroes[_currHero].getHp() << " hp" << ")" << " vs. "
                           << enemies[_currEnemy].getName() << "(" << enemies[_currEnemy].getHp() << " hp" << ")" << std::endl;
-                int heroDamage = heroes[_currHero].getStrength();
-                int enemyHp = enemies[_currEnemy].getHp();
-                int enemyDamage = enemies[_currEnemy].getStrength();
-                int heroHp = heroes[_currHero].getHp();
-                std::cin.ignore();
-                while(1){
-                    std::cout << "Press enter to continue";
-                    std::cin.ignore();
-                    // Hero attacks enemy
-                    enemyHp -= heroDamage;
-                    std::cout << heroes[_currHero].getName() << " attacks " << enemies[_currEnemy].getName() << " for " << heroDamage << " damage" << std::endl;
-                    std::cout << enemies[_currEnemy].getName() << " has " << enemyHp << " hp" << std::endl;
-                    if(enemyHp <= 0){
-                        std::cout << "You won \n" << std::endl;
-                        query.prepare("SELECT xp "
-                                      "FROM enemy "
-                                      "WHERE name = :name");
-                        query.bindValue(":name", QString::fromStdString(enemies[_currEnemy].getName()));
-                        query.exec();
-                        while(query.next()){
-                            heroes[_currHero].getXp(query.value(0).toInt());
-                        }
-                        break;
+                heroes[_currHero].fight(enemies[_currEnemy]);
+                if(heroes[_currHero].getHp() <= 0){
+                    query.exec("SELECT * FROM hero WHERE name = '" + QString::fromStdString(heroes[_currHero].getName()) + "'");
+                    while(query.next()){
+                        heroes[_currHero].setHp(query.value(2).toInt());
                     }
-
-                    // Enemy attacks hero
-                    heroHp -= enemyDamage;
-                    std::cout << enemies[_currEnemy].getName() << " attacks " << heroes[_currHero].getName() << " for " << enemyDamage << " damage" << std::endl;
-                    std::cout << heroes[_currHero].getName() << " has " << heroHp << " hp" << std::endl;
-
-                    if(heroHp <= 0){
-                        std::cout << "You died" << std::endl;
-                        break;
-                    }
+                    std::cout << "Game over" << std::endl;
+                    _bossBattle = false;
+                    return false;
+                } else if(_bossBattle){
+                    return false;
+                } else {
+                    return true;
                 }
             } else {
                 std::cout << "Enemy not found" << std::endl;
@@ -230,6 +224,8 @@ void Interface::gameLoop(){
     if(!heroSelection()){
         return;
     }
-    std::cout << "You are now playing as " << heroes[_currHero].getName() << std::endl;
-    singleBattle();
+    while(singleBattle()){}
+    if(_bossBattle){
+        std::cout << "Congratulations you have defeated the Dragon!" << std::endl;
+    }
 }
