@@ -21,7 +21,7 @@ std::vector<Enemy> Cave::makeCave(){
     std::string element;
 
     if(_id == 7){
-        query.exec("SELECT * FROM enemy WHERE enemy_id = '7'");
+        query.exec("SELECT * FROM enemy WHERE name = 'Unicorn'");
         query.next();
         name = query.value(1).toString().toStdString();
         hp = query.value(2).toInt();
@@ -34,7 +34,7 @@ std::vector<Enemy> Cave::makeCave(){
     } else if(_id == 6){
         std::cout << "This is the boss level" << std::endl;
         for(int i = 0; i < numEnemies; i++){
-            query.exec("SELECT * FROM enemy WHERE enemy_id = '6'");
+            query.exec("SELECT * FROM enemy WHERE name = 'Ape King'");
             query.next();
             name = query.value(1).toString().toStdString();
             hp = query.value(2).toInt();
@@ -43,7 +43,7 @@ std::vector<Enemy> Cave::makeCave(){
             element = query.value(5).toString().toStdString();
             enemies.push_back(Enemy(name, hp, strength, xp, element));
         }
-        query.exec("SELECT * FROM enemy WHERE enemy_id = '8'");
+        query.exec("SELECT * FROM enemy WHERE enemy_id = 'Dragon'");
         query.next();
         name = query.value(1).toString().toStdString();
         hp = query.value(2).toInt();
@@ -53,13 +53,17 @@ std::vector<Enemy> Cave::makeCave(){
         enemies.push_back(Enemy(name, hp, strength, xp, element));
     } else {
         for(int i = 0; i < numEnemies; i++){
+            int offset = _id - 1;
             if(i == numEnemies-1){
-                query.exec("SELECT * FROM enemy WHERE enemy_id = '" + QString::number(_id+2) + "'");
+                query.prepare("SELECT * FROM enemy ORDER BY strength ASC LIMIT 1 OFFSET :offset");
+                query.bindValue(":offset", offset+2);
             } else {
-                std::uniform_int_distribution<> dis(_id, _id+1);
-                int enemyID = dis(gen);
-                query.exec("SELECT * FROM enemy WHERE enemy_id = '" + QString::number(enemyID) + "'");
+                std::uniform_int_distribution<> dis(0, 1);
+                int enemyID = offset + dis(gen);
+                query.prepare("SELECT * FROM enemy ORDER BY strength ASC LIMIT 1 OFFSET :enemyID");
+                query.bindValue(":enemyID", enemyID);
             }
+            query.exec();
             query.next();
             name = query.value(1).toString().toStdString();
             hp = query.value(2).toInt();

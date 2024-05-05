@@ -11,11 +11,9 @@
 #include <QtSql>
 #include <QSqlDatabase>
 
-class Interface
+class Interface : public MagicShop
 {
-    QSqlQuery query;
     QSqlDatabase db;
-    MagicShop magicShop;
     std::vector<Enemy> enemies;
     std::vector<Hero> heroes;
     int _currHero;

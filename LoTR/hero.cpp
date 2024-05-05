@@ -115,7 +115,7 @@ void Hero::fight(Enemy enemy){
                             std::cout << "You do not have enough magic to use this item" << std::endl;
                             continue;
                         }
-                        if(query.value(3) > getHp()){
+                        if(query.value(3).toInt() > getHp()){
                             std::cout << "You do not have enough hp to use this item" << std::endl;
                             continue;
                         }
@@ -197,10 +197,6 @@ void Hero::fight(Enemy enemy){
 
         if(getHp() <= 0){
             _magic = (_level*2)-2;
-            query.exec("SELECT * FROM hero WHERE name = '" + QString::fromStdString(getName()) + "'");
-            while(query.next()){
-                setHp(query.value(2).toInt());
-            }
             std::cout << "You died" << std::endl;
             return;
         }
@@ -209,6 +205,12 @@ void Hero::fight(Enemy enemy){
 
 void Hero::gainXp(int xp){
     _xp += xp;
+    query.prepare("UPDATE hero "
+                  "SET xp = :xp "
+                  "WHERE name = :name");
+    query.bindValue(":xp", _xp);
+    query.bindValue(":name", QString::fromStdString(getName()));
+    query.exec();
     if(_xp >= _level*1000){
         levelUp();
     }

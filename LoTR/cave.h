@@ -12,7 +12,7 @@ class Cave
 {
     int _id;
     std::string _name;
-    int _gold = 0;
+    int _gold;
     QSqlQuery query;
 
 public:

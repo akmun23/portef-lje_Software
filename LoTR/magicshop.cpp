@@ -17,6 +17,7 @@ bool MagicShop::enterShop(Hero& hero){
     while(1){
         if(counter != 0){
             std::cout << "Press (4) to get all options" << std::endl;
+            std::cout << "You currently have " << hero.getGold() << " gold" << std::endl;
         }
         std::cout << "Enter your choice: ";
         std::cin >> choice;
@@ -49,7 +50,8 @@ void MagicShop::showWares(){
     query.exec("SELECT * FROM magic");
     std::cout << "Magic wares:" << std::endl;
     while(query.next()){
-        std::cout << "(" << query.value(0).toString().toStdString() << ") "  << query.value(1).toString().toStdString() << std::endl;
+        std::cout << "(" << query.value(0).toString().toStdString() << ") "  << query.value(1).toString().toStdString()
+                  << ", cost: " << query.value(6).toInt() << std::endl;
     }
     std::cout << std::endl;
 }
@@ -144,17 +146,32 @@ void MagicShop::buyItem(Hero& hero){
     query.exec();
     query.next();
     if(!query.value(0).isNull()){
+        //Split the requirement string into individual requirements
         std::string requirement = query.value(0).toString().toStdString();
-        query.prepare("SELECT * FROM inventory "
-                      "WHERE hero_id = (SELECT hero_id from hero WHERE name = :name) "
-                      "AND magic_id = (SELECT magic_id from magic WHERE name = :requirement)");
-        query.bindValue(":name", QString::fromStdString(hero.getName()));
-        query.bindValue(":requirement", QString::fromStdString(requirement));
-        query.exec();
-        if(!query.next()){
-            std::cout << "You do not meet the requirement for this item" << std::endl;
-            std::cout << std::endl;
-            return;
+        std::vector<std::string> splitReq;
+        std::string currReq;
+        for(int i = 0; i < requirement.size(); i++){
+            if(requirement[i] == ','){
+                splitReq.push_back(currReq);
+                currReq.clear();
+                i++;
+            } else {
+                currReq.push_back(requirement[i]);
+            }
+        }
+        splitReq.push_back(currReq);
+        for(int i = 0; i < splitReq.size(); i++){
+            query.prepare("SELECT * FROM inventory "
+                          "WHERE hero_id = (SELECT hero_id from hero WHERE name = :name) "
+                          "AND magic_id = (SELECT magic_id from magic WHERE name = :requirement)");
+            query.bindValue(":name", QString::fromStdString(hero.getName()));
+            query.bindValue(":requirement", QString::fromStdString(splitReq[i]));
+            query.exec();
+            if(!query.next()){
+                std::cout << "You do not meet the requirement for this item" << std::endl;
+                std::cout << std::endl;
+                return;
+            }
         }
     }
 

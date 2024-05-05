@@ -5,8 +5,8 @@
 
 class MagicShop
 {
-    QSqlQuery query;
 public:
+    QSqlQuery query;
     MagicShop();
     bool enterShop(Hero &hero);
     void getInfo();

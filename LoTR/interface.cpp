@@ -57,7 +57,7 @@ Interface::Interface(QSqlDatabase &db) {
                     "hp INT NOT NULL,"
                     "strength INT NOT NULL,"
                     "xp INT NOT NULL,"
-                    "element_id INT,"
+                    "element_id INT NOT NULL,"
                     "PRIMARY KEY (enemy_id),"
                     "FOREIGN KEY (element_id) REFERENCES element(element_id)"
                     ")")) {
@@ -95,7 +95,8 @@ Interface::Interface(QSqlDatabase &db) {
                     "hero_id INT NOT NULL,"
                     "magic_id INT NOT NULL,"
                     "FOREIGN KEY (hero_id) REFERENCES hero(hero_id),"
-                    "FOREIGN KEY (magic_id) REFERENCES magic(magic_id)"
+                    "FOREIGN KEY (magic_id) REFERENCES magic(magic_id),"
+                    "UNIQUE (hero_id, magic_id)"
                     ")")) {
         qWarning() << "Failed to create table 'Inventory':";
         qWarning() << query.lastError().text();
@@ -396,7 +397,7 @@ bool Interface::gameChoice(){
         }
         return false;
     } else if(input == "2"){
-        if(magicShop.enterShop(heroes[_currHero])){
+        if(enterShop(heroes[_currHero])){
             return true;
         }
     } else if(input == "9"){
