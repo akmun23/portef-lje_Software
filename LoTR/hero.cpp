@@ -168,7 +168,7 @@ void Hero::fight(Enemy enemy){
 
             std::string weakness = query.value(0).toString().toStdString();
 
-            damage = magicDamage;
+            damage += magicDamage;
             setHp(getHp()-selfDamage);
             _magic -= magicCost;
             query.bindValue(":name", QString::fromStdString(getName()));
@@ -179,6 +179,7 @@ void Hero::fight(Enemy enemy){
         enemyHp -= damage;
         std::cout << getName() << " attacks " << enemy.getName() << " for " << damage << " damage" << std::endl;
         std::cout << enemy.getName() << " has " << enemyHp << " hp" << std::endl;
+        magicUsed = false;
         if(enemyHp <= 0){
             std::cout << "You won \n" << std::endl;
             query.exec("SELECT * FROM hero WHERE name = '" + QString::fromStdString(getName()) + "'");
