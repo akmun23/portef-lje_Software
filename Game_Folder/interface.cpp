@@ -340,7 +340,7 @@ bool Interface::caveBattle(){
             _bossBattle = true;
         }
         heroes[_currHero].fight(caveEnemies[i]);
-        if(cavePicked != 5){
+        if(cavePicked != 5 && i < caveEnemies.size()-1){
             std::cout << "You have fought bravely, but there are more enemies ahead!" << std::endl;
             std::cout << "You can still turn back and exit the cave" << std::endl;
             if(i < caveEnemies.size()-1){
